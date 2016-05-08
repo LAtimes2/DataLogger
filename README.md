@@ -5,7 +5,7 @@ This sketch provides an example of recording temperature once a minute to the Fl
 
 If you don't have an SD card, you can use flash memory to log data. This example uses the prop shield to read temperature and to store data.
 
-This example is meant to show 3 things:
-* Write data to flash using the SerialFlash library ()
-* Go into low power mode between samples using the Snooze library ()
-* Read temperature using the Adafruit_MPL3115A2 library ()
+This example shows 3 things:
+* Write data to flash using the SerialFlash library (https://github.com/PaulStoffregen/SerialFlash.git)
+* Go into low power mode between samples using the Snooze library (https://github.com/duff2013/Snooze.git)
+* Read temperature using the Adafruit_MPL3115A2 library (https://github.com/adafruit/Adafruit_MPL3115A2_Library.git)
