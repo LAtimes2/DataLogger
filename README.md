@@ -11,10 +11,12 @@ This example shows 3 things:
 * Read temperature on prop shield using the Adafruit_MPL3115A2 library (https://github.com/adafruit/Adafruit_MPL3115A2_Library.git)
 
 Configurable at compile time:
+
 1. Enable Snooze library by setting #define SLEEP 1
 2. Set Local time offset by setting GMT_OFFSET to hours ahead or behind GMT (UTC). e.g. Chicago is -5 during daylight saving time.
 
 Typical usage:
+
 1. erase (e) or smart erase (m) to delete previous data in Flash
 2. [optional] change sample rate (n#) from default of 60 seconds, e.g. n5 to sample every 5 seconds
 3. [optional] if no realtime clock, set time
@@ -27,6 +29,7 @@ Typical usage:
 8. copy and paste the data into a spreadsheet as a CSV file
 
 Typical usage when using a battery or USB charger:
+
 1. erase (e) or smart erase (m) to delete previous data in Flash
 2. [optional] change sample rate (n#) from default of 60 seconds, e.g. n5 to sample every 5 seconds
 3. [optional] if no realtime clock, set time
