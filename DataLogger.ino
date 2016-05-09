@@ -2,7 +2,21 @@
 #include "TemperatureSensor.h"
 #include <TimeLib.h>
 
-#define SLEEP 0  // change to 1 to use the Snooze library to sleep between samples
+//////////// User Congifuration /////////////
+
+#define SLEEP 0                  // change to 1 to use the Snooze library to sleep between samples
+#define GMT_OFFSET -5            // conversion from GMT to local time, in hours
+#define LED_TIME_NOT_LOGGING  1  // flash LED at this rate if not logging
+#define LED_TIME_LOGGING     10  // flash LED at this rate if logging
+
+// hardware settings
+#define LED_PIN 13
+const int FlashChipSelect = 6; // digital pin for flash chip CS pin
+
+// number of bytes at start of block that must be 0xFF to consider it erased
+#define SMART_ERASE_SIZE 128
+
+//////////// End Congifuration /////////////
 
 #if SLEEP
 #include <Snooze.h>
@@ -10,17 +24,6 @@
 SnoozeBlock snoozeConfig;
 int sleepTime = 0;
 #endif
-
-#define GMT_OFFSET -5            // conversion from GMT to local time, in hours
-#define LED_TIME_NOT_LOGGING  1  // flash LED at this rate if not logging
-#define LED_TIME_LOGGING     10  // flash LED at this rate if logging
-
-// number of bytes at start of block that must be 0xFF to consider it erased
-#define SMART_ERASE_SIZE 128
-
-// hardware settings
-#define LED_PIN 13
-const int FlashChipSelect = 6; // digital pin for flash chip CS pin
 
 bool flashFull = false;
 bool logging = false;
@@ -54,6 +57,7 @@ void setup() {
 
   showMenu ();
 
+  // read stuff from Flash files
   updateTime ();
   updateSampleRate ();
 
@@ -111,7 +115,10 @@ void loop() {
 #if SLEEP
   // compute shortest sleep time to next event
   sleepTime = nextBlinkTime - millis();
+
   int workingSleepTime = nextReadTime - millis();
+
+  // find shortest time
   if (workingSleepTime < sleepTime) sleepTime = workingSleepTime;
 
   // only sleep if not connected via USB
@@ -157,7 +164,7 @@ void processMessage() {
   }
 
   if (inByte == 'e') {
-    if (verifyErase ()) {
+    if (areYouSure ()) {
       dataLogger.eraseAll ();
       flashFull = false;
       Serial.println("  Erase complete");
@@ -167,7 +174,7 @@ void processMessage() {
   }
 
   if (inByte == 'm') {
-    if (verifyErase ()) {
+    if (areYouSure ()) {
       updateSampleRate();
       dataLogger.smartEraseAll (SMART_ERASE_SIZE, true);
       flashFull = false;
@@ -338,7 +345,7 @@ void startLogging() {
   }
 }
 
-bool verifyErase() {
+bool areYouSure() {
   uint32_t startTime = millis();
   Serial.println ("Are you sure you want to erase entire SPI Flash? y/[n]");
 
